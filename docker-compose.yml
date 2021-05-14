@@ -6,7 +6,7 @@ volumes:
 
 services:
   db:
-    image: docker-registry.x5.ru/postgres:12.2-alpine
+    image: postgres
     env_file:
       - .env
     volumes:

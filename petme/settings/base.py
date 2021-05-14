@@ -6,6 +6,7 @@ from decouple import config
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 SETTINGS_DIR = os.path.dirname(os.path.abspath(__file__))
 BASE_DIR = os.path.dirname(os.path.dirname(SETTINGS_DIR))
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DEBUG", default=False, cast=bool)
