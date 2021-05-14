@@ -1,0 +1,62 @@
+version: '3.8'
+
+volumes:
+  pg-data:
+    driver: local
+
+services:
+  db:
+    image: docker-registry.x5.ru/postgres:12.2-alpine
+    env_file:
+      - .env
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    ports:
+      - 5420:5420
+
+#  redis:
+#    image: docker-registry.x5.ru/redis:6.0-alpine
+#    expose:
+#      - 6379
+#    ports:
+#      - 6379:6379
+
+  app:
+    <<: &app
+      depends_on:
+        - db
+#        - redis
+      build:
+        context: .
+        dockerfile: ./Dockerfile
+      env_file:
+        - .env
+      volumes:
+        - .:/code
+      environment:
+        POSTGRES_HOST: db
+        DJANGO_SETTINGS_MODULE: petme.settings.development
+#        REDIS_URL: redis://redis:6379
+    ports:
+      - 8000:8000
+    command: gunicorn -b 0.0.0.0:8000 -w 4 petme.wsgi:application
+
+#  rabbitmq:
+#    image: docker-registry.x5.ru/rabbitmq:3
+#    ports:
+#      - 5672:5672
+#    environment:
+#      RABBITMQ_DEFAULT_USER: guest
+#      RABBITMQ_DEFAULT_PASS: guest
+
+#  celery:
+#    <<: *app
+#    depends_on:
+#      - db
+#      - redis
+#      - rabbitmq
+#    environment:
+#      CELERY_BROKER_URL: amqp://guest:guest@rabbitmq:5672
+#    links:
+#      - redis:redis
+#    command: celery -A zerolevelcontrol worker --loglevel=info
