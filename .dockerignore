@@ -1,0 +1,4 @@
+**/.git
+.local-cache
+.venv
+.cicd
