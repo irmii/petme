@@ -5,8 +5,9 @@ import django_heroku
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-SETTINGS_DIR = os.path.dirname(os.path.abspath(__file__))
+SETTINGS_DIR = os.path.abspath(__file__)
 BASE_DIR = os.path.dirname(os.path.dirname(SETTINGS_DIR))
+# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -61,18 +62,26 @@ WSGI_APPLICATION = 'petme.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': config("POSTGRES_DB"),
+#         'USER': config("POSTGRES_USER"),
+#         'PASSWORD': config("POSTGRES_PASSWORD"),
+#         'HOST': config("POSTGRES_HOST"),
+#         'PORT': config("POSTGRES_PORT", cast=int),
+#         'OPTIONS': {
+#             'options': '-c search_path=petme,public',
+#         },
+#     },
+# }
+
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': config("POSTGRES_DB"),
-        'USER': config("POSTGRES_USER"),
-        'PASSWORD': config("POSTGRES_PASSWORD"),
-        'HOST': config("POSTGRES_HOST"),
-        'PORT': config("POSTGRES_PORT", cast=int),
-        'OPTIONS': {
-            'options': '-c search_path=petme,public',
-        },
-    },
+    "default": {
+        "ENGINE" : "django.db.backends.sqlite3",
+        "NAME": os.path.join(BASE_DIR, "db.sqlite3")
+    }
 }
 
 
