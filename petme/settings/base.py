@@ -28,6 +28,8 @@ INSTALLED_APPS = [
     'pets',
     'phonenumber_field',
     'common',
+    'authentication',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
@@ -64,27 +66,27 @@ WSGI_APPLICATION = 'petme.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': config("POSTGRES_DB"),
-#         'USER': config("POSTGRES_USER"),
-#         'PASSWORD': config("POSTGRES_PASSWORD"),
-#         'HOST': config("POSTGRES_HOST"),
-#         'PORT': config("POSTGRES_PORT", cast=int),
-#         'OPTIONS': {
-#             'options': '-c search_path=petme,public',
-#         },
-#     },
-# }
-
-
 DATABASES = {
-    "default": {
-        "ENGINE" : "django.db.backends.sqlite3",
-        "NAME": os.path.join(BASE_DIR, "db.sqlite3")
-    }
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': config("POSTGRES_DB"),
+        'USER': config("POSTGRES_USER"),
+        'PASSWORD': config("POSTGRES_PASSWORD"),
+        'HOST': config("POSTGRES_HOST"),
+        'PORT': config("POSTGRES_PORT", cast=int),
+        'OPTIONS': {
+            'options': '-c search_path=petme,public',
+        },
+    },
 }
+
+
+# DATABASES = {
+#     "default": {
+#         "ENGINE" : "django.db.backends.sqlite3",
+#         "NAME": os.path.join(BASE_DIR, "db.sqlite3")
+#     }
+# }
 
 
 # Password validation
@@ -109,6 +111,11 @@ AUTH_PASSWORD_VALIDATORS = [
 # manage.py createdefaultsuperuser (command)
 TEST_DEFAULT_ADMIN_USERNAME = config('TEST_DEFAULT_ADMIN_USERNAME', default='admin')
 TEST_DEFAULT_ADMIN_PASSWORD = config('TEST_DEFAULT_ADMIN_PASSWORD', default='superuser')
+TEST_DEFAULT_ADMIN_EMAIL = config('TEST_DEFAULT_ADMIN_PASSWORD', default='zazzzu@yandex.ru')
+
+
+# Использовать кастомную модель
+AUTH_USER_MODEL = 'authentication.User'
 
 
 # Internationalization
@@ -125,5 +132,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+REST_FRAMEWORK = {
+    'EXCEPTION_HANDLER': 'petme.exceptions.core_exception_handler',
+    'NON_FIELD_ERRORS_KEY': 'error',
+}
 
 django_heroku.settings(locals())

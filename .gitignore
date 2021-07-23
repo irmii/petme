@@ -174,4 +174,6 @@ dmypy.json
 tmp/
 docker-compose.override.yml
 /static/
+petme/staticfiles/*
+/petme/staticfiles/staticfiles.json
 csv/
