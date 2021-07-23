@@ -16,6 +16,8 @@ gunicorn = "==20.0.4"
 requests = "==2.7.0"
 Pillow = "*"
 django_heroku = "*"
+phonenumbers = "*"
+django-phonenumber-field = "*"
 
 
 [requires]
