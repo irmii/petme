@@ -1,7 +1,6 @@
 [dev-packages]
 django-debug-toolbar = "*"
 pytest = "==5.4.1"
-django-extensions = "*"
 
 
 [packages]
@@ -21,6 +20,7 @@ phonenumbers = "*"
 django-phonenumber-field = "*"
 pyjwt = "==1.5.3"
 dj-database-url = "*"
+django-extensions = "*"
 
 
 [requires]
