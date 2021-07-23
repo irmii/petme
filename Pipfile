@@ -20,6 +20,7 @@ django_heroku = "*"
 phonenumbers = "*"
 django-phonenumber-field = "*"
 pyjwt = "==1.5.3"
+dj-database-url = "*"
 
 
 [requires]

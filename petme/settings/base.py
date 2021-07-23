@@ -2,6 +2,7 @@
 import os
 from decouple import config
 import django_heroku
+import dj_database_url
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -66,27 +67,7 @@ WSGI_APPLICATION = 'petme.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': config("POSTGRES_DB"),
-        'USER': config("POSTGRES_USER"),
-        'PASSWORD': config("POSTGRES_PASSWORD"),
-        'HOST': config("POSTGRES_HOST"),
-        'PORT': config("POSTGRES_PORT", cast=int),
-        'OPTIONS': {
-            'options': '-c search_path=petme,public',
-        },
-    },
-}
-
-
-# DATABASES = {
-#     "default": {
-#         "ENGINE" : "django.db.backends.sqlite3",
-#         "NAME": os.path.join(BASE_DIR, "db.sqlite3")
-#     }
-# }
+DATABASES = {'default': dj_database_url.config(conn_max_age=600, ssl_require=True)}
 
 
 # Password validation
