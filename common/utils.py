@@ -1,3 +1,4 @@
+"""Модуль утилит."""
 
 
 def all_fields(model):
