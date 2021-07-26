@@ -18,9 +18,10 @@ Pillow = "*"
 django_heroku = "*"
 phonenumbers = "*"
 django-phonenumber-field = "*"
-pyjwt = "==1.5.3"
+pyjwt = "==2.0.1"
 dj-database-url = "*"
 django-extensions = "*"
+django-allauth = "*"
 
 
 [requires]
