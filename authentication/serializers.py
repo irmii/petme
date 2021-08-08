@@ -36,24 +36,29 @@ class LoginUserSerializer(serializers.Serializer):
 
         if email is None:
             raise serializers.ValidationError(
-                'An email address is required to log in.'
+                'Введите email.'
             )
 
         if password is None:
             raise serializers.ValidationError(
-                'A password is required to log in.'
+                'Введите пароль.'
             )
 
         user = authenticate(username=email, password=password)
 
         if user is None:
             raise serializers.ValidationError(
-                'A user with this email and password was not found.'
+                'Пользователь с введенными данным не найден.'
             )
 
         if not user.is_active:
             raise serializers.ValidationError(
-                'This user has been deactivated.'
+                'Данный пользователь не активен.'
+            )
+
+        if not user.is_email_verified:
+            raise serializers.ValidationError(
+                'Подтвердите email, пожалуйста.'
             )
 
         return {

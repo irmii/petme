@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'django_celery_results',
 ]
 
 MIDDLEWARE = [
@@ -129,7 +130,6 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
@@ -149,5 +149,24 @@ REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'petme.exceptions.core_exception_handler',
     'NON_FIELD_ERRORS_KEY': 'error',
 }
+
+# Настройки SMTP
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+MAILER_EMAIL_BACKEND = EMAIL_BACKEND
+EMAIL_HOST = config('EMAIL_HOST', default='your_mail_server')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='your_password')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='your_email')
+EMAIL_PORT = config('EMAIL_PORT')
+EMAIL_USE_SSL = config("EMAIL_USE_SSL", default=True, cast=bool)
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+
+# Celery
+CELERY_BROKER_URL = config('CELERY_BROKER_URL', default="amqp://rabbitmquser:some_password@rabbitmq:5672")
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_TIMEZONE = 'Europe/Moscow'
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
+
 
 django_heroku.settings(locals())

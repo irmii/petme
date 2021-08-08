@@ -22,6 +22,9 @@ pyjwt = "==2.0.1"
 dj-database-url = "*"
 django-extensions = "*"
 django-allauth = "*"
+celery = "==4.4.2"
+django-celery-results = "==1.2.1"
+django-redis = "==4.12.1"
 
 
 [requires]
