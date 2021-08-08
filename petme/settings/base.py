@@ -156,7 +156,7 @@ MAILER_EMAIL_BACKEND = EMAIL_BACKEND
 EMAIL_HOST = config('EMAIL_HOST', default='your_mail_server')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='your_password')
 EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='your_email')
-EMAIL_PORT = config('EMAIL_PORT')
+EMAIL_PORT = config('EMAIL_PORT', default='465')
 EMAIL_USE_SSL = config("EMAIL_USE_SSL", default=True, cast=bool)
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
