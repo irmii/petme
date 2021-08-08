@@ -8,4 +8,5 @@ app_name = 'authentication'
 urlpatterns = [
     path('users/', RegistrationAPIView.as_view()),
     path('users/login/', LoginAPIView.as_view()),
+    path('users/confirm_email/', LoginAPIView.as_view()),
 ]

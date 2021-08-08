@@ -1,20 +1,20 @@
-import jwt
 
+import jwt
 from datetime import datetime, timedelta
 
 from django.conf import settings
+from django.utils import timezone
 from django.contrib.auth.models import (
     AbstractBaseUser, BaseUserManager, PermissionsMixin
 )
-
 from django.db import models
+from common.const import MAXLENGTH4
 
 
 class UserManager(BaseUserManager):
     """
     Django требует, чтобы кастомные пользователи определяли свой собственный
-    класс Manager. Унаследовавшись от BaseUserManager, мы получаем много того
-    же самого кода, который Django использовал для создания User (для демонстрации).
+    класс Manager.
     """
 
     def create_user(self, username, email, password=None):
@@ -54,6 +54,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(db_index=True, unique=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+    is_email_verified = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -64,22 +65,21 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         return self.email
 
+    def get_serialized_data(self):
+        return {
+            'username': self.username,
+            'email': self.email,
+            'conf_code': self.get_last_confirmation_code,
+        }
+
     @property
     def token(self):
-        """
-        Позволяет получить токен пользователя путем вызова user.token, вместо
-        user._generate_jwt_token(). Декоратор @property выше делает это
-        возможным. token называется "динамическим свойством".
-        """
+        """ Позволяет получить токен пользователя путем вызова user.token. """
 
         return self._generate_jwt_token()
 
     def get_full_name(self):
-        """
-        Этот метод требуется Django для таких вещей, как обработка электронной
-        почты. Обычно это имя фамилия пользователя, но поскольку мы не
-        используем их, будем возвращать username.
-        """
+        """ Будем возвращать username. """
 
         return self.username
 
@@ -101,3 +101,31 @@ class User(AbstractBaseUser, PermissionsMixin):
         }, settings.SECRET_KEY, algorithm='HS256')
 
         return token.encode().decode('utf-8')
+
+    @property
+    def get_last_confirmation_code(self):
+        return self.user_confirmation_codes.order_by('created').first().code
+
+
+class ConfirmationCodes(models.Model):
+    """Информация о высланных кодах подтверждения email."""
+
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='user_confirmation_codes',
+    )
+    code = models.CharField(
+        'Код подтверждения',
+        max_length=MAXLENGTH4,
+    )
+    created = models.DateTimeField(
+        'Дата и время генерации кода',
+    )
+
+    def save(self, *args, **kwargs):
+        """ Сохраняет время генерации записи. """
+
+        if not self.id:
+            self.created = timezone.now()
+        return super(ConfirmationCodes, self).save(*args, **kwargs)
