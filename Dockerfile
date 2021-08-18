@@ -1,7 +1,7 @@
 FROM python:3.8-slim
 LABEL description="App контейнер petme."
 
-ARG BUILD_PACKAGES="gcc g++ software-properties-common apt-transport-https apt-utils gnupg1 libcurl4-openssl-dev libssl-dev git-core postgresql python-psycopg2 libpq-dev"
+ARG BUILD_PACKAGES="gcc g++ software-properties-common apt-transport-https apt-utils gnupg1 libcurl4-openssl-dev libssl-dev git-core postgresql build-dep psycopg2 python-psycopg2 libpq-dev"
 ARG BUILD_DEPS="netcat ca-certificates"
 
 ENV PYTHONDONTWRITEBYTECODE 1
