@@ -20,7 +20,7 @@ services:
     volumes:
       - static:/static
     ports:
-      - 80:80
+      - 81:81
     depends_on:
       - app
 
