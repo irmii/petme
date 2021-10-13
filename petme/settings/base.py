@@ -15,7 +15,9 @@ DEBUG = config("DEBUG", default=False, cast=bool)
 
 SECRET_KEY = config("SECRET_KEY", default='hello')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'petme.petme.company',
+]
 
 # Application definition
 INSTALLED_APPS = [
