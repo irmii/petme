@@ -2,6 +2,7 @@ pytz
 requests
 python-dotenv
 ipython
+decouple
 
 # Django
 django
@@ -12,8 +13,6 @@ whitenoise
 
 # Django 3.0 async requirements
 gunicorn
-uvicorn
-uvloop
 httptools
 
 # Databases
@@ -25,8 +24,6 @@ celery
 redis
 django-celery-beat
 
-# Telegram
-python-telegram-bot
 
 # monitoring
 # sentry-sdk
