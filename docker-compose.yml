@@ -1,45 +1,58 @@
-version: '3.8'
-
-volumes:
-  pg-data:
-    driver: local
-  static:
+version: "3.8"
 
 services:
   db:
-    image: postgres
+    image: postgres:12
+    container_name: petme_postgres
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
     env_file:
-      - .env
-    volumes:
-      - pg-data:/var/lib/postgresql/data
+      - ./.env
     ports:
-      - 5434:5432
-
-  nginx:
-    build: ./nginx
+      - "5433:5432"
+  redis:
+    image: redis:alpine
+    container_name: petme_redis
+  web:
+    build: .
+    container_name: petme_django
+    command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     volumes:
-      - static:/static
+      - .:/code
     ports:
-      - 81:81
+      - "8000:8000"
+    env_file:
+      - ./.env
     depends_on:
-      - app
+      - db
 
-  app:
-    <<: &app
-      depends_on:
-        - db
-      build:
-        context: .
-        dockerfile: ./Dockerfile
-      env_file:
-        - .env
-      volumes:
-        - .:/code
-        - static:/static
-      environment:
-        POSTGRES_HOST: db
-        DJANGO_SETTINGS_MODULE: petme.settings.development
-    ports:
-      - 8000:8000
-    command: gunicorn -b 0.0.0.0:8000 -w 4 petme.wsgi:application
+  celery:
+    build: .
+    container_name: petme_celery
+    command: celery -A petme worker --loglevel=INFO
+    volumes:
+      - .:/code
+    env_file:
+      - ./.env
+    depends_on:
+      - redis
+      - web
+  celery-beat:
+    build: .
+    container_name: petme_beat
+    command: celery -A petme beat -l info --scheduler django_celery_beat.schedulers.DatabaseScheduler
+    volumes:
+      - .:/code
+    env_file:
+      - ./.env
+    depends_on:
+      - redis
+      - celery
+      - web
 
+volumes:
+  postgres_data:
