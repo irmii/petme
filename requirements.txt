@@ -2,7 +2,7 @@ pytz
 requests
 python-dotenv
 ipython
-decouple
+python-decouple==3.5
 
 # Django
 django
