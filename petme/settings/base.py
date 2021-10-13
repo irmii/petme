@@ -1,7 +1,6 @@
 """Base settings."""
 import os
 from decouple import config
-import django_heroku
 import dj_database_url
 
 
@@ -167,6 +166,3 @@ CELERY_RESULT_BACKEND = 'django-db'
 CELERY_TIMEZONE = 'Europe/Moscow'
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
-
-
-django_heroku.settings(locals())
