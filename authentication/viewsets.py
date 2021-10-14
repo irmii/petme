@@ -69,6 +69,23 @@ class UserViewSet(ModelViewSet):
         return response
 
     @action(detail=False, methods=['post'])
+    def send_confirm_code_again(self, request):
+        """Выслать код с подтверждением еще раз.
+
+        Arguments:
+            request: Объект запроса
+
+        Returns:
+            объект Response
+        """
+        email = request.data.get('email', None)
+        response = Response({'message': 'Введите email!'}, status=status.HTTP_400_BAD_REQUEST)
+        if email:
+            send_email_confirmation.delay(email)
+            response = Response({'message': 'Код выслан повторно!'}, status=status.HTTP_200_OK)
+        return response
+
+    @action(detail=False, methods=['post'])
     def login(self, request):
         user = request.data.get('user', {})
         serializer = self.get_serializer_class()(data=user)
