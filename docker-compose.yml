@@ -1,62 +1,58 @@
-version: '3.8'
-
-volumes:
-  pg-data:
-    driver: local
+version: "3.8"
 
 services:
   db:
-    image: postgres
-    env_file:
-      - .env
+    image: postgres:12
+    container_name: petme_postgres
+    restart: always
     volumes:
-      - pg-data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    env_file:
+      - ./.env
     ports:
-      - 5434:5432
-
-#  redis:
-#    image: docker-registry.x5.ru/redis:6.0-alpine
-#    expose:
-#      - 6379
-#    ports:
-#      - 6379:6379
-
-  app:
-    <<: &app
-      depends_on:
-        - db
-#        - redis
-      build:
-        context: .
-        dockerfile: ./Dockerfile
-      env_file:
-        - .env
-      volumes:
-        - .:/code
-      environment:
-        POSTGRES_HOST: db
-        DJANGO_SETTINGS_MODULE: petme.settings.development
-#        REDIS_URL: redis://redis:6379
+      - "5433:5432"
+  redis:
+    image: redis:alpine
+    container_name: petme_redis
+  web:
+    build: .
+    container_name: petme_django
+    command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/code
     ports:
-      - 8000:8000
-    command: gunicorn -b 0.0.0.0:8000 -w 4 petme.wsgi:application
+      - "8000:8000"
+    env_file:
+      - ./.env
+    depends_on:
+      - db
 
-#  rabbitmq:
-#    image: docker-registry.x5.ru/rabbitmq:3
-#    ports:
-#      - 5672:5672
-#    environment:
-#      RABBITMQ_DEFAULT_USER: guest
-#      RABBITMQ_DEFAULT_PASS: guest
+  celery:
+    build: .
+    container_name: petme_celery
+    command: celery -A petme worker --loglevel=INFO
+    volumes:
+      - .:/code
+    env_file:
+      - ./.env
+    depends_on:
+      - redis
+      - web
+  celery-beat:
+    build: .
+    container_name: petme_beat
+    command: celery -A petme beat -l info --scheduler django_celery_beat.schedulers.DatabaseScheduler
+    volumes:
+      - .:/code
+    env_file:
+      - ./.env
+    depends_on:
+      - redis
+      - celery
+      - web
 
-#  celery:
-#    <<: *app
-#    depends_on:
-#      - db
-#      - redis
-#      - rabbitmq
-#    environment:
-#      CELERY_BROKER_URL: amqp://guest:guest@rabbitmq:5672
-#    links:
-#      - redis:redis
-#    command: celery -A petme worker --loglevel=info
+volumes:
+  postgres_data:

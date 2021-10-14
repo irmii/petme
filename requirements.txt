@@ -1,0 +1,42 @@
+pytz
+requests
+python-dotenv
+ipython
+python-decouple==3.5
+
+# Django
+django
+django-timezone-field 
+django-cors-headers
+django-debug-toolbar
+django-phonenumber-field
+django-filter==2.3.0
+djangorestframework==3.11.1
+dj-database-url
+django-extensions
+django-allauth
+whitenoise
+pytest-django==3.9.0
+python-dateutil==2.8.1
+phonenumbers
+pyjwt==2.0.1
+Pillow
+
+# Django 3.0 async requirements
+gunicorn
+httptools
+
+# Databases
+psycopg2-binary
+dj-database-url
+
+# Distributed tasks
+celery
+redis
+django-celery-beat
+django-celery-results
+django-redis
+
+
+# monitoring
+# sentry-sdk

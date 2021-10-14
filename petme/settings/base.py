@@ -1,7 +1,6 @@
 """Base settings."""
 import os
 from decouple import config
-import django_heroku
 import dj_database_url
 
 
@@ -14,9 +13,11 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DEBUG", default=False, cast=bool)
 
-SECRET_KEY = config("SECRET_KEY")
+SECRET_KEY = config("SECRET_KEY", default='hello')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'petme.petme.company',
+]
 
 # Application definition
 INSTALLED_APPS = [
@@ -167,6 +168,3 @@ CELERY_RESULT_BACKEND = 'django-db'
 CELERY_TIMEZONE = 'Europe/Moscow'
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
-
-
-django_heroku.settings(locals())
