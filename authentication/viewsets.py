@@ -66,15 +66,27 @@ class UserViewSet(ModelViewSet):
         email = request.data.get('email', None)
         code = request.data.get('code', None)
         if email and code:
-            user = user_model.objects.get(email=email)
-            if user.get_last_confirmation_code == code:
-                user.is_email_verified = True
-                user.save()
-                response = Response({'message': 'Email подтвержден!'}, status=status.HTTP_200_OK)
+            if user_model.objects.filter(
+                    email=email,
+                    is_email_verified=False,
+            ).exists():
+                user = user_model.objects.get(email=email)
+                if user.get_last_confirmation_code == code:
+                    user.is_email_verified = True
+                    user.save()
+                    response = Response(
+                        {
+                            'message': 'Email подтвержден!',
+                            'token': user.token,
+                        },
+                        status=status.HTTP_200_OK
+                    )
+                else:
+                    response = Response({'message': 'Неправильный код!'}, status=status.HTTP_400_BAD_REQUEST)
             else:
-                response = Response({'message': 'Неправильный код!'}, status=status.HTTP_400_BAD_REQUEST)
+                response = Response({'message': 'Подходящего пользователя не существует!'}, status=status.HTTP_400_BAD_REQUEST)
         else:
-            response = Response({'message': 'Некорректный email!'}, status=status.HTTP_400_BAD_REQUEST)
+            response = Response({'message': 'Недостаточно данных!'}, status=status.HTTP_400_BAD_REQUEST)
         return response
 
     @action(detail=False, methods=['post'])
