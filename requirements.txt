@@ -4,7 +4,7 @@ python-dotenv
 ipython
 python-decouple==3.5
 
-# Django
+# Django and co
 django
 django-timezone-field 
 django-cors-headers
@@ -21,8 +21,6 @@ python-dateutil==2.8.1
 phonenumbers
 pyjwt==2.0.1
 Pillow
-
-# Django 3.0 async requirements
 gunicorn
 httptools
 

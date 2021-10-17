@@ -99,7 +99,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # manage.py createdefaultsuperuser (command)
 TEST_DEFAULT_ADMIN_USERNAME = config('TEST_DEFAULT_ADMIN_USERNAME', default='admin')
 TEST_DEFAULT_ADMIN_PASSWORD = config('TEST_DEFAULT_ADMIN_PASSWORD', default='superuser')
-TEST_DEFAULT_ADMIN_EMAIL = config('TEST_DEFAULT_ADMIN_PASSWORD', default='zazzzu@yandex.ru')
+TEST_DEFAULT_ADMIN_EMAIL = config('TEST_DEFAULT_ADMIN_PASSWORD', default='bup@bip.ru')
 
 
 # Использовать кастомную модель
