@@ -11,6 +11,7 @@ from authentication.serializers import (
 )
 from authentication.renderers import UserJSONRenderer
 from authentication.tasks import send_email_confirmation
+from authentication.models import User
 
 
 class UserViewSet(ModelViewSet):
@@ -28,14 +29,22 @@ class UserViewSet(ModelViewSet):
         Returns:
             объект Response
         """
-        data = request.data
-        serializer = self.get_serializer_class()(data=data)
-        if serializer.is_valid():
-            serializer.save()
-            send_email_confirmation.delay(serializer.data.get('email'))
-            response = Response(serializer.data, status=status.HTTP_201_CREATED)
+        user_data = request.data
+        serializer = self.get_serializer_class()(data=user_data)
+        if User.objects.filter(
+                email=request.data.get('email'),
+                is_email_verified=False,
+        ).exists():
+            email = request.data.get('email')
+            send_email_confirmation.delay(email)
+            response = Response({'email': email}, status=status.HTTP_200_OK)
         else:
-            response = Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            if serializer.is_valid():
+                serializer.save()
+                send_email_confirmation.delay(serializer.data.get('email'))
+                response = Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                response = Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return response
 
     def get_serializer_class(self):
