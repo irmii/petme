@@ -17,15 +17,13 @@ class UserManager(BaseUserManager):
     класс Manager.
     """
 
-    def create_user(self, username, email, password=None):
+    def create_user(self, email, password=None):
         """ Создает и возвращает пользователя с имэйлом, паролем и именем. """
-        if username is None:
-            raise TypeError('Users must have a username.')
 
         if email is None:
             raise TypeError('Users must have an email address.')
 
-        user = self.model(username=username, email=self.normalize_email(email))
+        user = self.model(email=self.normalize_email(email))
         user.set_password(password)
         user.save()
 
@@ -48,9 +46,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     """Кастомная модель пользователя. """
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
 
-    username = models.CharField(db_index=True, max_length=255, unique=True)
+    username = models.CharField(max_length=255)
     email = models.EmailField(db_index=True, unique=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)

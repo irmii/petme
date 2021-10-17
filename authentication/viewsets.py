@@ -28,8 +28,8 @@ class UserViewSet(ModelViewSet):
         Returns:
             объект Response
         """
-        user = request.data.get('user', {})
-        serializer = self.get_serializer_class()(data=user)
+        data = request.data
+        serializer = self.get_serializer_class()(data=data)
         if serializer.is_valid():
             serializer.save()
             send_email_confirmation.delay(serializer.data.get('email'))
