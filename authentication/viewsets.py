@@ -108,8 +108,8 @@ class UserViewSet(ModelViewSet):
 
     @action(detail=False, methods=['post'])
     def login(self, request):
-        user = request.data.get('user', {})
-        serializer = self.get_serializer_class()(data=user)
+        user_data = request.data
+        serializer = self.get_serializer_class()(data=user_data)
         if serializer.is_valid():
             response = Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
