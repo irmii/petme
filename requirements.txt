@@ -23,6 +23,7 @@ pyjwt==2.0.1
 Pillow
 gunicorn
 httptools
+whitenoise
 
 # Databases
 psycopg2-binary
