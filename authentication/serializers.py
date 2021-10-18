@@ -67,3 +67,9 @@ class LoginUserSerializer(serializers.Serializer):
             'email': user.email,
             'token': user.token
         }
+
+
+class СonfirmEmailSerializer(serializers.Serializer):
+    email = serializers.CharField(max_length=255)
+    code = serializers.CharField(max_length=128, write_only=True)
+    token = serializers.CharField(max_length=255, read_only=True)
