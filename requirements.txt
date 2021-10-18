@@ -24,6 +24,8 @@ Pillow
 gunicorn
 httptools
 whitenoise
+pyyaml
+uritemplate
 
 # Databases
 psycopg2-binary

@@ -1,20 +1,25 @@
-from rest_framework import status
+from rest_framework import status, viewsets
+from rest_framework import mixins
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet
 from django.apps import apps
+
 
 from authentication.serializers import (
     RegistrationSerializer,
     LoginUserSerializer,
+    СonfirmEmailSerializer,
 )
 from authentication.renderers import UserJSONRenderer
 from authentication.tasks import send_email_confirmation
 from authentication.models import User
 
 
-class UserViewSet(ModelViewSet):
+class UserViewSet(
+    mixins.CreateModelMixin,
+    viewsets.GenericViewSet,
+):
     """ Разрешить всем пользователям (аутентифицированным и нет) доступ к данному эндпоинту. """
 
     permission_classes = (AllowAny,)
@@ -50,6 +55,8 @@ class UserViewSet(ModelViewSet):
     def get_serializer_class(self):
         if self.action_map.get('post', None) == 'login':
             return LoginUserSerializer
+        if self.action_map.get('post', None) == 'confirm_email':
+            return СonfirmEmailSerializer
         return RegistrationSerializer
 
     @action(detail=False, methods=['post'])
