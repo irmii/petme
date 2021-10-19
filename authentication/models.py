@@ -101,7 +101,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def get_last_confirmation_code(self):
-        return self.user_confirmation_codes.order_by('created').first().code
+        return self.user_confirmation_codes.order_by('-created').first().code
 
 
 class ConfirmationCodes(models.Model):
