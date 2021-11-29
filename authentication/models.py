@@ -25,6 +25,7 @@ class UserManager(BaseUserManager):
 
         user = self.model(email=self.normalize_email(email))
         user.set_password(password)
+        print('Тут все классно!')
         user.save()
 
         return user
