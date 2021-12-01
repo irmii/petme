@@ -29,4 +29,5 @@ urlpatterns = [
         ),
         name='swagger-ui',
     ),
+    path('api/', include('pets.urls'))
 ]
