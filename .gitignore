@@ -10,6 +10,7 @@ logs/
 .static/
 .uploads/
 
+
 # CMake
 cmake-build-*/
 
